@@ -58,7 +58,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="RecetasUitTest.cs" />
-    <Compile Include="PruebaTest.cs" />
+    <Compile Include="LineaTest.cs" />
     <Compile Include="LoginUitTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

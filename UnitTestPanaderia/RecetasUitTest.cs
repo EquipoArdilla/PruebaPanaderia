@@ -2,7 +2,6 @@
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Support.UI;
-
 using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
@@ -25,7 +24,6 @@ namespace UnitTestPanaderia
             driver.FindElement(By.ClassName("btn-block")).Click();
 
         }
-
         public int CreaReceta() {
 
             driver.Navigate().GoToUrl(url + "/Recetas/Create");
@@ -63,6 +61,7 @@ namespace UnitTestPanaderia
             driver.FindElement(By.ClassName("btn")).Click();
             return seleccionInsumo;
         }
+
         [Test]
         public void RegistroRecetaTest()
         {
@@ -95,6 +94,7 @@ namespace UnitTestPanaderia
             //comparo elementos
             Microsoft.VisualStudio.TestTools.UnitTesting.Assert.AreEqual(idBusca, textoAtributo);
         }
+
         [Test]
         public void EditarRecetaTest()
         {
@@ -176,30 +176,21 @@ namespace UnitTestPanaderia
         [Test]
         public void EliminaInsumoTest()
         {
-            // Variables para busqueda 
             LoginReceta();
-            string idBusca =  Convert.ToString(CreaReceta());
-            string seleccionInsumo = "Sal";
+            string idBusca = Convert.ToString(CreaReceta());
+            string seleccionInsumo = CreaInsumo(idBusca);
             string insumo = "";
-            CreaInsumo(idBusca);
 
-            LoginReceta();
-
-            //Busca url 
             driver.Navigate().GoToUrl(url + "/DetalleReceta/Index/" + idBusca);
 
             //click  boton eliminar
             driver.FindElement(By.Id(seleccionInsumo + " " + idBusca)).Click();
 
-            //verificar  que el insumo existe 
-            try {
-                IWebElement element = driver.FindElement(By.Id(seleccionInsumo));
-                insumo = element.GetAttribute("Id");
-            }
-            catch (Exception) {
-                insumo = "";
-            }
-            Microsoft.VisualStudio.TestTools.UnitTesting.Assert.AreNotEqual(seleccionInsumo, insumo);
+            var element = driver.FindElement(By.Id("tablaInsumos"));
+            List<IWebElement> elementoTabla = new List<IWebElement>(element.FindElements(By.TagName("tr")));
+            insumo = elementoTabla.Count == 1 ? "" : "No es correcto"; 
+        
+            Microsoft.VisualStudio.TestTools.UnitTesting.Assert.AreEqual("", insumo);
 
             }
         

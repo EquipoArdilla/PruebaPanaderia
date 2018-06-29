@@ -60,8 +60,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="LineaUiTest.cs" />
     <Compile Include="RecetasUitTest.cs" />
-    <Compile Include="LineaTest.cs" />
     <Compile Include="LoginUitTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

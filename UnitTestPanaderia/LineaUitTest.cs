@@ -9,26 +9,40 @@ using System.Linq;
 namespace UnitTestPanaderia
 {
     [TestClass]
-    public class LineaUiTest
+    public class LineaUitTest
     {
-
-
         string url = "http://localhost:60656";
         IWebDriver driver = new ChromeDriver();
+
+        public void Logear()
+        {
+            driver.Navigate().GoToUrl(url + "/Home/Login");
+            driver.FindElement(By.Id("nombre")).SendKeys("Luis");
+            driver.FindElement(By.Id("clave")).SendKeys("1234");
+            driver.FindElement(By.ClassName("btn-block")).Click();
+        }
+
+
+        public void AgregarAux()
+        {
+            Random num = new Random();
+            int numero = num.Next(0, 100);
+            string probar = "LineaPrueba" + numero.ToString();
+            driver.Navigate().GoToUrl(url + "/lineas/Create");
+            driver.FindElement(By.Id("nombre")).Clear();
+            driver.FindElement(By.Id("nombre")).SendKeys(probar);
+            driver.FindElement(By.Id("guardar")).Click();
+
+        }
 
 
         [Test]
         public void AgregarTest()
         {
+            Logear();
             Random num = new Random();
             int numero = num.Next(0, 100);
-            string probar = "LineaPrueba"+numero.ToString();
-            driver.Navigate().GoToUrl(url + "/Home/Login");
-
-            driver.FindElement(By.Id("nombre")).SendKeys("ariel");
-            driver.FindElement(By.Id("clave")).SendKeys("1234");
-
-            driver.FindElement(By.ClassName("btn-block")).Click();
+            string probar = "LineaPrueba"+numero.ToString();           
 
             driver.Navigate().GoToUrl(url + "/lineas");
             driver.FindElement(By.Id("crear")).Click();
@@ -46,7 +60,7 @@ namespace UnitTestPanaderia
                 if (lstTdElem.Count > 0)
                 {
                     foreach (var elemTd in lstTdElem)
-                    {              
+                    {           
                       
                         if (elemTd.Text.Equals(probar))
                         {
@@ -61,57 +75,17 @@ namespace UnitTestPanaderia
 
             //driver.Close();
             //driver.Quit();
-        }
-
-
-
-        [Test]
-        public void ListarTest()
-        {
-            driver.Navigate().GoToUrl(url + "/Home/Login");
-
-            driver.FindElement(By.Id("nombre")).SendKeys("ariel");
-            driver.FindElement(By.Id("clave")).SendKeys("1234");
-            driver.FindElement(By.ClassName("btn-block")).Click();
-
-            driver.Navigate().GoToUrl(url + "/lineas/Index");
-
-            var elemTable = driver.FindElement(By.Id("tablaLineas"));
-
-            NUnit.Framework.Assert.IsNotEmpty(elemTable.Text);
-            Console.WriteLine(elemTable.Text);
-
-            List<IWebElement> lstTrElem = new List<IWebElement>(elemTable.FindElements(By.TagName("tr")));
-            
-
-            foreach (var elemTr in lstTrElem)
-            {
-                List<IWebElement> lstTdElem = new List<IWebElement>(elemTr.FindElements(By.TagName("td")));                
-                if (lstTdElem.Count > 0)
-                {
-                   NUnit.Framework.Assert.NotZero(lstTdElem.Count);
-                   Console.WriteLine("Lineas Encontradas "+lstTdElem[0].Text);
-                }               
-            }
-
-            //driver.Close();
-
-            //driver.Quit();
-        }
-
-
+        }        
         
+
+        //Edita ultimo elemento de la tabla
         [Test]
         public void EditarTest()
         {
             string prueba = "LineaEditada";
-            driver.Navigate().GoToUrl(url + "/Home/Login");
-
-            driver.FindElement(By.Id("nombre")).SendKeys("ariel");
-            driver.FindElement(By.Id("clave")).SendKeys("1234");
-            driver.FindElement(By.ClassName("btn-block")).Click();
-
+            Logear();            
             driver.Navigate().GoToUrl(url + "/lineas");
+            AgregarAux();
 
             var elemTable = driver.FindElement(By.Id("tablaLineas"));
 
@@ -120,10 +94,7 @@ namespace UnitTestPanaderia
             int filas = Convert.ToInt16(lstTrElem.Count.ToString());
             int idurl = Convert.ToInt16(filas) + 1;
             string value = driver.FindElement(By.XPath("/html/body/div[2]/table/tbody/tr[" + idurl.ToString() + "]/td[1]")).Text;
-            Console.WriteLine(filas);
-            Console.WriteLine(idurl);
-            Console.WriteLine(value);
-
+            
             //driver.Navigate().GoToUrl(url + "/lineas/Edit/"+idurl);          
             driver.FindElement(By.XPath("/html/body/div[2]/table/tbody/tr[" + idurl.ToString() + "]/td[3]/a[1]")).Click();
             
@@ -153,10 +124,7 @@ namespace UnitTestPanaderia
 
                 }
 
-            }
-
-
-          
+            }          
             //driver.Close();
 
             //driver.Quit();
@@ -164,18 +132,13 @@ namespace UnitTestPanaderia
 
 
 
-
+        //Elimina ultimo elemento de la tbala
         [Test]
         public void EliminarTest()
         {
-            //string prueba = "LineaEditada";
-            driver.Navigate().GoToUrl(url + "/Home/Login");
-
-            driver.FindElement(By.Id("nombre")).SendKeys("ariel");
-            driver.FindElement(By.Id("clave")).SendKeys("1234");
-            driver.FindElement(By.ClassName("btn-block")).Click();
-
+            Logear();
             driver.Navigate().GoToUrl(url + "/lineas");
+            AgregarAux();
 
             var elemTable = driver.FindElement(By.Id("tablaLineas"));
 
@@ -184,10 +147,7 @@ namespace UnitTestPanaderia
             int filas = Convert.ToInt16(lstTrElem.Count.ToString());
             int idurl = Convert.ToInt16(filas) + 1;
             string value = driver.FindElement(By.XPath("/html/body/div[2]/table/tbody/tr[" + idurl.ToString() + "]/td[1]")).Text;
-            Console.WriteLine(filas);
-            Console.WriteLine(idurl);
-            Console.WriteLine(value);
-
+            
             //driver.Navigate().GoToUrl(url + "/lineas/Edit/"+idurl);          
             driver.FindElement(By.XPath("/html/body/div[2]/table/tbody/tr[" + idurl.ToString() + "]/td[3]/a[3]")).Click();
 
@@ -235,11 +195,8 @@ namespace UnitTestPanaderia
         public void DetalleEditaTest()
         {
             string prueba = "LineaDetalleEditada";
-            driver.Navigate().GoToUrl(url + "/Home/Login");
-
-            driver.FindElement(By.Id("nombre")).SendKeys("ariel");
-            driver.FindElement(By.Id("clave")).SendKeys("1234");
-            driver.FindElement(By.ClassName("btn-block")).Click();
+            Logear();
+            AgregarAux();
 
             driver.Navigate().GoToUrl(url + "/lineas");
 
@@ -257,16 +214,9 @@ namespace UnitTestPanaderia
 
             driver.FindElement(By.Id("btnEditar")).Click();
 
-
-
             driver.FindElement(By.Id("nombre")).Clear();
             driver.FindElement(By.Id("nombre")).SendKeys(prueba);
             driver.FindElement(By.Id("guardar")).Click();
-
-
-
-
-
 
             var elemTable2 = driver.FindElement(By.Id("tablaLineas"));
 
@@ -292,19 +242,39 @@ namespace UnitTestPanaderia
                 }
 
             }
-
-
-
+            
             //driver.Close();
 
             //driver.Quit();
         }
 
+        [Test]
+        public void ListarTest()
+        {
+            Logear();
+            driver.Navigate().GoToUrl(url + "/lineas/Index");
+            AgregarAux();
+            var elemTable = driver.FindElement(By.Id("tablaLineas"));
 
+            NUnit.Framework.Assert.IsNotEmpty(elemTable.Text);
+            Console.WriteLine(elemTable.Text);
 
+            List<IWebElement> lstTrElem = new List<IWebElement>(elemTable.FindElements(By.TagName("tr")));
 
+            foreach (var elemTr in lstTrElem)
+            {
+                List<IWebElement> lstTdElem = new List<IWebElement>(elemTr.FindElements(By.TagName("td")));
+                if (lstTdElem.Count > 0)
+                {
+                    NUnit.Framework.Assert.NotZero(lstTdElem.Count);
+                    Console.WriteLine("Lineas Encontradas " + lstTdElem[0].Text);
+                }
+            }
 
+            //driver.Close();
 
+            //driver.Quit();
+        }
 
 
 

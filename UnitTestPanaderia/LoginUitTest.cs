@@ -17,19 +17,19 @@ namespace UnitTestPanaderia
         {
             driver.Navigate().GoToUrl(url + "/Home/Login");
 
-            driver.FindElement(By.Id("nombre")).SendKeys("ariel");
+            driver.FindElement(By.Id("nombre")).SendKeys("Luis");
             driver.FindElement(By.Id("clave")).SendKeys("1234");
 
             driver.FindElement(By.XPath("/html/body/form/div/div/div/div[2]/div[4]/div/input")).Click();
 
 
-            IWebElement element = driver.FindElement(By.XPath("/html/body/div[2]/header/div/a/img"));
+            IWebElement element = driver.FindElement(By.XPath("/html/body/div[1]/div/div/div/div[2]/ul[2]/li[2]/a"));
 
-            String src_imagen = element.GetAttribute("src");
+            String control = element.Text;
 
-            Microsoft.VisualStudio.TestTools.UnitTesting.Assert.AreEqual(url + "/Img/ardilla-meme-panadero.jpg", src_imagen);
+            Microsoft.VisualStudio.TestTools.UnitTesting.Assert.AreEqual(control, "Salir");
 
-
+            driver.FindElement(By.XPath("/html/body/div[1]/div/div/div/div[2]/ul[2]/li[2]/a")).Click();
 
             driver.Close();
 

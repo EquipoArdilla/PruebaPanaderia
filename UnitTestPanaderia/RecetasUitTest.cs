@@ -48,7 +48,6 @@ namespace UnitTestPanaderia
         }
         public string CreaInsumo( string idBusca)
         {
-            string buscaTexto = "insumo " + idBusca;
             string seleccionInsumo = "Sal";
 
             driver.Navigate().GoToUrl(url + "/DetalleReceta/Index/" + idBusca);
@@ -179,7 +178,6 @@ namespace UnitTestPanaderia
             LoginReceta();
             string idBusca = Convert.ToString(CreaReceta());
             string seleccionInsumo = CreaInsumo(idBusca);
-            string insumo = "";
 
             driver.Navigate().GoToUrl(url + "/DetalleReceta/Index/" + idBusca);
 
@@ -188,7 +186,7 @@ namespace UnitTestPanaderia
 
             var element = driver.FindElement(By.Id("tablaInsumos"));
             List<IWebElement> elementoTabla = new List<IWebElement>(element.FindElements(By.TagName("tr")));
-            insumo = elementoTabla.Count == 1 ? "" : "No es correcto"; 
+            string insumo = elementoTabla.Count == 1 ? "" : "No es correcto"; 
         
             Microsoft.VisualStudio.TestTools.UnitTesting.Assert.AreEqual("", insumo);
 

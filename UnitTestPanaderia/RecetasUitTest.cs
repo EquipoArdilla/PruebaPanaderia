@@ -64,7 +64,7 @@ namespace UnitTestPanaderia
         [Test]
         public void RegistroRecetaTest()
         {
-     
+            int idBuscaNumero = 0;
             // Ingreso Login
             LoginReceta();
 
@@ -73,7 +73,7 @@ namespace UnitTestPanaderia
 
             //Genero id Aleatoreo
             Random rnd = new Random();
-            int idBuscaNumero = rnd.Next(0, 1000);
+            idBuscaNumero = rnd.Next(0, 1000);
 
             //convierto id para text
             String idBusca =Convert.ToString(idBuscaNumero);
@@ -155,6 +155,7 @@ namespace UnitTestPanaderia
         {
             LoginReceta();
             string idBusca = Convert.ToString(CreaReceta());
+            string buscaTexto = "insumo " + idBusca;
             string seleccionInsumo = "Sal";
 
             driver.Navigate().GoToUrl(url + "/DetalleReceta/Index/"+ idBusca);

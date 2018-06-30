@@ -128,8 +128,8 @@ namespace UnitTestPanaderia
             //String textoAtributo = element.GetAttribute("Id");
 
             //Microsoft.VisualStudio.TestTools.UnitTesting.Assert.AreEqual("", textoAtributo);
-            driver.Close();
-            driver.Quit();
+            //driver.Close();
+            //driver.Quit();
 
         }
         //[Test]

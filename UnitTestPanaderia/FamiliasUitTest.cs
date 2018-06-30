@@ -15,6 +15,8 @@ namespace UnitTestPanaderia
          
         string url = "http://localhost:60656";
         IWebDriver driver = new ChromeDriver();
+        int IdFamilia = 0;
+        string nombreFamilia = "0";
 
         public void LoginReceta()
         {
@@ -34,12 +36,13 @@ namespace UnitTestPanaderia
             //Genero id Aleatoreo
             Random rnd = new Random();
             idBuscaNumero = rnd.Next(0, 1000);
-
+            IdFamilia = idBuscaNumero;
             //convierto id para text
             String idBusca = Convert.ToString(idBuscaNumero);
 
             //Ingreso registros
             driver.FindElement(By.Id("nombre")).SendKeys("Enojon " + idBusca);
+            nombreFamilia = "Enojon " + idBusca;
             IWebElement element = driver.FindElement(By.Id("lineaId"));
             SelectElement oSelect = new SelectElement(element);
             oSelect.SelectByValue("2");
@@ -47,34 +50,13 @@ namespace UnitTestPanaderia
             driver.FindElement(By.ClassName("btn")).Click();
 
         }
-
-        public int CreaFamilia()
-        {
-
-            driver.Navigate().GoToUrl(url + "/familias/Create");
-            int idBuscaNumero = 0;
-            //Genero id Aleatoreo
-            Random rnd = new Random();
-            idBuscaNumero = rnd.Next(0, 20);
-
-            //convierto id para text
-            String idBusca = Convert.ToString(idBuscaNumero);
-
-            //Ingreso registros
-            driver.FindElement(By.Id("nombre")).SendKeys("Avellanas" + idBusca);
-            driver.FindElement(By.Id("lineaId")).SendKeys("2");
-
-            //Presiono click en Boton
-            driver.FindElement(By.ClassName("btn")).Click();
-
-            return idBuscaNumero;
-        }
+        
 
         [Test]
         public void EditarRecetaTest()
         {
             LoginReceta();
-            string idBusca = Convert.ToString(CreaFamilia());
+            string idBusca = Convert.ToString(IdFamilia);
             string nombreModifico = "Modifico " + DateTime.Today + idBusca;
 
             //Busca url 
@@ -104,18 +86,25 @@ namespace UnitTestPanaderia
         public void EliminaFamiliaTest()
         {
             LoginReceta();
-            string idBusca = Convert.ToString(CreaFamilia());
+            if (nombreFamilia == "0") CreaFamilias();
+            string idBusca = nombreFamilia;
+            
 
-            driver.Navigate().GoToUrl(url + "/familia/Index/" + idBusca);
+            driver.Navigate().GoToUrl(url + "/familias/");
+            var element = driver.FindElement(By.ClassName("table"));
+            List<IWebElement> elementoTabla = new List<IWebElement>(element.FindElements(By.TagName("tr")));
+            int cantidadInicia = elementoTabla.Count();
+
+            driver.FindElement(By.Id(nombreFamilia)).Click();
 
             //click  boton eliminar
-            driver.FindElement(By.Id("Delete " + idBusca)).Click();
-
-            var element = driver.FindElement(By.Id("table"));
-            List<IWebElement> elementoTabla = new List<IWebElement>(element.FindElements(By.TagName("tr")));
+            driver.FindElement(By.Id("elimina")).Click();
+            var element2 = driver.FindElement(By.ClassName("table"));
+            List<IWebElement> elementoElimina = new List<IWebElement>(element2.FindElements(By.TagName("tr")));
+            int cantidadFinal= elementoElimina.Count();
             string insumo = elementoTabla.Count == 1 ? "" : "No es correcto";
 
-            Microsoft.VisualStudio.TestTools.UnitTesting.Assert.AreEqual("", insumo);
+           Microsoft.VisualStudio.TestTools.UnitTesting.Assert.AreNotEqual(cantidadFinal, cantidadInicia);
 
         }
 

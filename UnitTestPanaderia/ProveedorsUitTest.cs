@@ -5,6 +5,7 @@ using OpenQA.Selenium.Support.UI;
 using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace UnitTestPanaderia
 {

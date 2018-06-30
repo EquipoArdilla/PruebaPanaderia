@@ -9,13 +9,13 @@ using System.Collections.Generic;
 namespace UnitTestPanaderia
 {
     [TestClass]
-    public class RecetasUnitTest
+    public class ProductoesUnitTest
     {
          
         string url = "http://localhost:60656";
         IWebDriver driver = new ChromeDriver();
 
-        public void LoginReceta()
+        public void LoginProducto()
         {
             // Ingreso Login
             driver.Navigate().GoToUrl(url + "/Home/Login");
@@ -24,9 +24,9 @@ namespace UnitTestPanaderia
             driver.FindElement(By.ClassName("btn-block")).Click();
 
         }
-        public int CreaReceta() {
+        public int CreaProducto() {
 
-            driver.Navigate().GoToUrl(url + "/Recetas/Create");
+            driver.Navigate().GoToUrl(url + "/Productoes/Create");
             int idBuscaNumero = 0;
             //Genero id Aleatoreo
             Random rnd = new Random();
@@ -38,19 +38,22 @@ namespace UnitTestPanaderia
             //Ingreso registros
             driver.FindElement(By.Id("Id")).SendKeys(idBusca);
             driver.FindElement(By.Id("nombre")).SendKeys("Pan Malito" + idBusca);
-            driver.FindElement(By.Id("valor_venta")).SendKeys("12");
-            driver.FindElement(By.Id("estado")).Click();
+            driver.FindElement(By.Id("formato")).SendKeys("12");
+            driver.FindElement(By.Id("familiaId")).SendKeys("12");
+            driver.FindElement(By.Id("usuarioId")).SendKeys("12");
+            driver.FindElement(By.Id("medidaId")).SendKeys("12");
 
             //Presiono click en Boton
             driver.FindElement(By.ClassName("btn")).Click();
 
             return idBuscaNumero;
         }
-        public string CreaInsumo( string idBusca)
+        public string CreaProducto( string idBusca)
         {
+            string buscaTexto = "Producto " + idBusca;
             string seleccionInsumo = "Sal";
 
-            driver.Navigate().GoToUrl(url + "/DetalleReceta/Index/" + idBusca);
+            driver.Navigate().GoToUrl(url + "/DetalleProducto/Index/" + idBusca);
 
             IWebElement element = driver.FindElement(By.Id("selectProducto"));
             SelectElement oSelect = new SelectElement(element);
@@ -62,14 +65,14 @@ namespace UnitTestPanaderia
         }
 
         [Test]
-        public void RegistroRecetaTest()
+        public void RegistroProductoTest()
         {
             int idBuscaNumero = 0;
             // Ingreso Login
-            LoginReceta();
+            LoginProducto();
 
             //Busca url 
-            driver.Navigate().GoToUrl(url + "/Recetas/Create");
+            driver.Navigate().GoToUrl(url + "/Productoes/Create");
 
             //Genero id Aleatoreo
             Random rnd = new Random();
@@ -80,8 +83,11 @@ namespace UnitTestPanaderia
 
             //Ingreso registros
             driver.FindElement(By.Id("Id")).SendKeys(idBusca);
-            driver.FindElement(By.Id("nombre")).SendKeys("Pan Malito"+ idBusca);
-            driver.FindElement(By.Id("valor_venta")).SendKeys("12");
+            driver.FindElement(By.Id("nombre")).SendKeys("Pan Malito" + idBusca);
+            driver.FindElement(By.Id("formato")).SendKeys("12");
+            driver.FindElement(By.Id("familiaId")).SendKeys("12");
+            driver.FindElement(By.Id("usuarioId")).SendKeys("12");
+            driver.FindElement(By.Id("medidaId")).SendKeys("12");
 
             //Presiono click en Boton
             driver.FindElement(By.ClassName("btn")).Click();
@@ -95,14 +101,14 @@ namespace UnitTestPanaderia
         }
 
         [Test]
-        public void EditarRecetaTest()
+        public void EditarProductoTest()
         {
-            LoginReceta();
-            string idBusca = Convert.ToString(CreaReceta());
+            LoginProducto();
+            string idBusca = Convert.ToString(CreaProducto());
             string nombreModifico = "Modifico " + DateTime.Today + idBusca;
 
             //Busca url 
-            driver.Navigate().GoToUrl(url + "/Recetas/Edit/"+ idBusca);
+            driver.Navigate().GoToUrl(url + "/Productoes/Edit/"+ idBusca);
 
             //Limpio formulario
             driver.FindElement(By.Id("nombre")).Clear();
@@ -112,6 +118,7 @@ namespace UnitTestPanaderia
             driver.FindElement(By.Id("nombre")).SendKeys(nombreModifico);
             driver.FindElement(By.Id("valor_venta")).SendKeys("14");
             driver.FindElement(By.Id("estado")).Click();
+
             
             //click boton
             driver.FindElement(By.ClassName("btn")).Click();
@@ -125,16 +132,16 @@ namespace UnitTestPanaderia
         }
 
         [Test]
-        public void RecetaNoActivaTest()
+        public void ProductoNoActivaTest()
         {
-            LoginReceta();
+            LoginProducto();
             // Variables para busqueda 
-            String idBusca = Convert.ToString(CreaReceta());
+            String idBusca = Convert.ToString(CreaProducto());
             String buscaNombre = "estado "+ idBusca;
             String textoAtributo = "Busco";
 
             //Busca url 
-            driver.Navigate().GoToUrl(url + "/Recetas/Edit/" + idBusca);
+            driver.Navigate().GoToUrl(url + "/Productoes/Edit/" + idBusca);
             
             //Modifico Campos
             driver.FindElement(By.Id("estado")).Click();
@@ -144,7 +151,7 @@ namespace UnitTestPanaderia
 
             //Busco elemento id para optener atributos y verificar  que el id existe 
             IWebElement element = driver.FindElement(By.Id(buscaNombre));
-            textoAtributo = element.GetAttribute("checked");
+            //textoAtributo = element.GetAttribute("checked");
            
             //comparo elementos
             Microsoft.VisualStudio.TestTools.UnitTesting.Assert.AreNotEqual("true", textoAtributo);
@@ -153,12 +160,12 @@ namespace UnitTestPanaderia
         [Test]
         public void RegistraInsumoTest()
         {
-            LoginReceta();
-            string idBusca = Convert.ToString(CreaReceta());
+            LoginProducto();
+            string idBusca = Convert.ToString(CreaProducto());
             string buscaTexto = "insumo " + idBusca;
             string seleccionInsumo = "Sal";
 
-            driver.Navigate().GoToUrl(url + "/DetalleReceta/Index/"+ idBusca);
+            driver.Navigate().GoToUrl(url + "productoes/Details" + idBusca);
             
             IWebElement element = driver.FindElement(By.Id("selectProducto"));
             SelectElement oSelect = new SelectElement(element);
@@ -173,20 +180,21 @@ namespace UnitTestPanaderia
         }
 
         [Test]
-        public void EliminaInsumoTest()
+        public void EliminaProductoTest()
         {
-            LoginReceta();
-            string idBusca = Convert.ToString(CreaReceta());
-            string seleccionInsumo = CreaInsumo(idBusca);
+            LoginProducto();
+            string idBusca = Convert.ToString(CreaProducto());
+            string seleccionProducto = CreaProducto(idBusca);
+            string Producto = "";
 
-            driver.Navigate().GoToUrl(url + "/DetalleReceta/Index/" + idBusca);
+            driver.Navigate().GoToUrl(url + "/DetalleProducto/Index/" + idBusca);
 
             //click  boton eliminar
-            driver.FindElement(By.Id(seleccionInsumo + " " + idBusca)).Click();
+            driver.FindElement(By.Id(seleccionProducto + " " + idBusca)).Click();
 
-            var element = driver.FindElement(By.Id("tablaInsumos"));
+            var element = driver.FindElement(By.Id("tablaProductos"));
             List<IWebElement> elementoTabla = new List<IWebElement>(element.FindElements(By.TagName("tr")));
-            string insumo = elementoTabla.Count == 1 ? "" : "No es correcto"; 
+            insumo = elementoTabla.Count == 1 ? "" : "No es correcto"; 
         
             Microsoft.VisualStudio.TestTools.UnitTesting.Assert.AreEqual("", insumo);
 

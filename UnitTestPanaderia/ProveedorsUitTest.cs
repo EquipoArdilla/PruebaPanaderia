@@ -47,5 +47,34 @@ namespace UnitTestPanaderia
 
 
         }
+
+        public void EditarproveedorTest()
+        {
+            LoginReceta();
+            
+            string nombreModifico = "Modifico " + DateTime.Today ;
+
+            //Busca url 
+            driver.Navigate().GoToUrl(url + "/Proveedors/Edit/" );
+
+            //Limpio formulario
+            driver.FindElement(By.Id("nombre")).Clear();
+            driver.FindElement(By.Id("precio")).Clear();
+
+            //Modifico Campos
+            driver.FindElement(By.Id("nombre")).SendKeys(nombreModifico);
+            driver.FindElement(By.Id("precio")).SendKeys("14");
+           
+
+            //click boton
+            driver.FindElement(By.ClassName("btn")).Click();
+
+            //Busco elemento id para optener atributos y verificar  que el id existe 
+            IWebElement element = driver.FindElement(By.Id("Pan Malito"));
+            String textoAtributo = element.GetAttribute("name");
+
+            //comparo elementos
+            Microsoft.VisualStudio.TestTools.UnitTesting.Assert.AreEqual(nombreModifico, textoAtributo);
+        }
     }
 }

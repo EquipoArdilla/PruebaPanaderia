@@ -5,6 +5,7 @@ using OpenQA.Selenium.Support.UI;
 using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace UnitTestPanaderia
 {
@@ -150,15 +151,18 @@ namespace UnitTestPanaderia
             string seleccionInsumo = insumoNombre;
 
             driver.Navigate().GoToUrl(url + "/DetalleReceta/Index/" + idBusca);
+            var elementInicia = driver.FindElement(By.Id("tablaInsumos"));
+            List<IWebElement> elementoTabla = new List<IWebElement>(elementInicia.FindElements(By.TagName("tr")));
+            int cantidadInicia= elementoTabla.Count(); 
 
             //click  boton eliminar
             driver.FindElement(By.Id(seleccionInsumo + " " + idBusca)).Click();
 
             var element = driver.FindElement(By.Id("tablaInsumos"));
-            List<IWebElement> elementoTabla = new List<IWebElement>(element.FindElements(By.TagName("tr")));
-            string insumo = elementoTabla.Count == 1 ? "" : "No es correcto"; 
+            List<IWebElement> elementoTablaFin = new List<IWebElement>(element.FindElements(By.TagName("tr")));
+            int cantidadFinal = elementoTablaFin.Count();
         
-            Microsoft.VisualStudio.TestTools.UnitTesting.Assert.AreEqual("", insumo);
+            Microsoft.VisualStudio.TestTools.UnitTesting.Assert.AreEqual(cantidadInicia -1, cantidadFinal);
 
             }
         

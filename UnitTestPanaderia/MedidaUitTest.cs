@@ -77,9 +77,7 @@ namespace UnitTestPanaderia
             //comparo elementos
             Microsoft.VisualStudio.TestTools.UnitTesting.Assert.AreEqual(idBusca, textoAtributo);
            
-            // Cierro Driver y ventana 
-            driver.Close();
-            driver.Quit();
+
         }
        
         [Test]
@@ -107,8 +105,7 @@ namespace UnitTestPanaderia
 
             //comparo elementos
             Microsoft.VisualStudio.TestTools.UnitTesting.Assert.AreEqual(nombreModifico, textoAtributo);
-            driver.Close();
-            driver.Quit();
+  
         }
        
         [Test]
@@ -128,8 +125,7 @@ namespace UnitTestPanaderia
             //String textoAtributo = element.GetAttribute("Id");
 
             //Microsoft.VisualStudio.TestTools.UnitTesting.Assert.AreEqual("", textoAtributo);
-            driver.Close();
-            driver.Quit();
+     
 
         }
         //[Test]

@@ -64,11 +64,11 @@ namespace UnitTestPanaderia
 
             //Limpio formulario
             driver.FindElement(By.Id("nombre")).Clear();
-            driver.FindElement(By.Id("lineaId")).Clear();
+           // driver.FindElement(By.Id("lineaId")).Clear();
 
             //Modifico Campos
             driver.FindElement(By.Id("nombre")).SendKeys(nombreModifico);
-            driver.FindElement(By.Id("lineaId")).SendKeys("9");
+            //driver.FindElement(By.Id("lineaId")).SendKeys("9");
 
             //click boton
             driver.FindElement(By.ClassName("btn")).Click();

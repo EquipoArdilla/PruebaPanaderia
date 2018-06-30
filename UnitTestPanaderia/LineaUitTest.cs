@@ -52,7 +52,7 @@ namespace UnitTestPanaderia
             var elemTable = driver.FindElement(By.Id("tablaLineas"));
 
             List<IWebElement> lstTrElem = new List<IWebElement>(elemTable.FindElements(By.TagName("tr")));
-            
+            Boolean lo_encontre = false;
             foreach (var elemTr in lstTrElem)
             {
                 Console.WriteLine(elemTr.Text);
@@ -64,25 +64,28 @@ namespace UnitTestPanaderia
                       
                         if (elemTd.Text.Equals(probar))
                         {
-                            NUnit.Framework.Assert.AreEqual(elemTd.Text, probar);
+                            lo_encontre = true;
                            
                         }
                     }
-
-                }       
-               
+                }     
+    
             }
+            NUnit.Framework.Assert.AreEqual(true, lo_encontre);
+
 
             //driver.Close();
             //driver.Quit();
-        }        
-        
+        }
+
 
         //Edita ultimo elemento de la tabla
         [Test]
         public void EditarTest()
         {
-            string prueba = "LineaEditada";
+            Random num = new Random();
+            int numero = num.Next(0, 100);
+            string prueba = "LineaEditada" + numero.ToString();
             Logear();            
             driver.Navigate().GoToUrl(url + "/lineas");
             AgregarAux();
@@ -105,7 +108,7 @@ namespace UnitTestPanaderia
             var elemTable2 = driver.FindElement(By.Id("tablaLineas"));
 
             List<IWebElement> lstTrElem2 = new List<IWebElement>(elemTable2.FindElements(By.TagName("tr")));
-
+            Boolean encontrado = false;
             foreach (var elemTr2 in lstTrElem2)
             {
                 Console.WriteLine(elemTr2.Text);
@@ -117,14 +120,20 @@ namespace UnitTestPanaderia
 
                         if (elemTd.Text.Equals(prueba))
                         {
-                            NUnit.Framework.Assert.AreEqual(elemTd.Text, prueba);
+                            //NUnit.Framework.Assert.AreEqual(elemTd.Text, prueba);
+                            encontrado = true;
+                            Console.WriteLine("entro");
 
                         }
+                     
+                        
                     }
+                    
 
                 }
 
-            }          
+            }
+            NUnit.Framework.Assert.AreEqual(true, encontrado);
             //driver.Close();
 
             //driver.Quit();
@@ -137,8 +146,10 @@ namespace UnitTestPanaderia
         public void EliminarTest()
         {
             Logear();
-            driver.Navigate().GoToUrl(url + "/lineas");
+            //driver.Navigate().GoToUrl(url + "/lineas");
             AgregarAux();
+            driver.Navigate().GoToUrl(url + "/lineas");
+            
 
             var elemTable = driver.FindElement(By.Id("tablaLineas"));
 
@@ -147,16 +158,18 @@ namespace UnitTestPanaderia
             int filas = Convert.ToInt16(lstTrElem.Count.ToString());
             int idurl = Convert.ToInt16(filas) + 1;
             string value = driver.FindElement(By.XPath("/html/body/div[2]/table/tbody/tr[" + idurl.ToString() + "]/td[1]")).Text;
-            
-            //driver.Navigate().GoToUrl(url + "/lineas/Edit/"+idurl);          
-            driver.FindElement(By.XPath("/html/body/div[2]/table/tbody/tr[" + idurl.ToString() + "]/td[3]/a[3]")).Click();
+            Console.WriteLine(filas);
+            Console.WriteLine(idurl);
+            Console.WriteLine(value);
+            driver.Navigate().GoToUrl(url + "/lineas/Delete/"+value);          
+//driver.FindElement(By.XPath("/html/body/div[2]/table/tbody/tr[" + idurl.ToString() + "]/td[3]/a[3]")).Click();
 
             driver.FindElement(By.Id("btnEliminar")).Click();
 
             var elemTable2 = driver.FindElement(By.Id("tablaLineas"));
 
             List<IWebElement> lstTrElem2 = new List<IWebElement>(elemTable2.FindElements(By.TagName("tr")));
-
+            Boolean eliminado = false;
             foreach (var elemTr2 in lstTrElem2)
             {
                 Console.WriteLine(elemTr2.Text);
@@ -168,19 +181,21 @@ namespace UnitTestPanaderia
 
                         if (elemTd.Text.Equals(value))
                         {
-                            NUnit.Framework.Assert.AreEqual(elemTd.Text, value);
+                            //NUnit.Framework.Assert.AreEqual(elemTd.Text, value);
+                            eliminado = false;
 
                         }
                         else
                         {
-                            NUnit.Framework.Assert.AreNotEqual(elemTd.Text, value);
-                            Console.WriteLine(idurl);
+                            eliminado = true;
                         }
+                       
                     }
 
                 }
 
             }
+            NUnit.Framework.Assert.AreEqual(true, eliminado);
 
 
 
@@ -221,7 +236,7 @@ namespace UnitTestPanaderia
             var elemTable2 = driver.FindElement(By.Id("tablaLineas"));
 
             List<IWebElement> lstTrElem2 = new List<IWebElement>(elemTable2.FindElements(By.TagName("tr")));
-
+            Boolean editado = false;
             foreach (var elemTr2 in lstTrElem2)
             {
                 Console.WriteLine(elemTr2.Text);
@@ -233,7 +248,7 @@ namespace UnitTestPanaderia
 
                         if (elemTd.Text.Equals(prueba))
                         {
-                            NUnit.Framework.Assert.AreEqual(elemTd.Text, prueba);
+                            editado = true;
 
                         }
                         
@@ -242,7 +257,8 @@ namespace UnitTestPanaderia
                 }
 
             }
-            
+            NUnit.Framework.Assert.AreEqual(true, editado);
+
             //driver.Close();
 
             //driver.Quit();
@@ -253,24 +269,25 @@ namespace UnitTestPanaderia
         {
             Logear();
             driver.Navigate().GoToUrl(url + "/lineas/Index");
-            AgregarAux();
+            //AgregarAux();
             var elemTable = driver.FindElement(By.Id("tablaLineas"));
 
             NUnit.Framework.Assert.IsNotEmpty(elemTable.Text);
             Console.WriteLine(elemTable.Text);
-
+            Boolean listar = false;
             List<IWebElement> lstTrElem = new List<IWebElement>(elemTable.FindElements(By.TagName("tr")));
-
+            
             foreach (var elemTr in lstTrElem)
             {
                 List<IWebElement> lstTdElem = new List<IWebElement>(elemTr.FindElements(By.TagName("td")));
-                if (lstTdElem.Count > 0)
+                if (lstTdElem.Count > 1)
                 {
                     NUnit.Framework.Assert.NotZero(lstTdElem.Count);
+                    listar = true;
                     Console.WriteLine("Lineas Encontradas " + lstTdElem[0].Text);
                 }
             }
-
+            NUnit.Framework.Assert.AreEqual(true, listar);
             //driver.Close();
 
             //driver.Quit();

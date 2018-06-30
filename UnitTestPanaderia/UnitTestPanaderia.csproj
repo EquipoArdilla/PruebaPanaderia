@@ -61,6 +61,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="LineaUitTest.cs" />
+    <Compile Include="FamiliasUitTest.cs" />
     <Compile Include="RecetasUitTest.cs" />
     <Compile Include="LoginUitTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

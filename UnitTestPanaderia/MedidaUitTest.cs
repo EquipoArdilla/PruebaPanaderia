@@ -1,8 +1,11 @@
 ﻿using NUnit.Framework;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
+using OpenQA.Selenium.Support.UI;
+
 using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Collections.Generic;
 
 namespace UnitTestPanaderia
 {
@@ -12,14 +15,41 @@ namespace UnitTestPanaderia
         string url = "http://localhost:60656";
         IWebDriver driver = new ChromeDriver();
 
-        [Test]
-        public void RegistroMedidaTest()
+        public void LoginMedida()
         {
             // Ingreso Login
             driver.Navigate().GoToUrl(url + "/Home/Login");
             driver.FindElement(By.Id("nombre")).SendKeys("ariel");
             driver.FindElement(By.Id("clave")).SendKeys("1234");
             driver.FindElement(By.ClassName("btn-block")).Click();
+
+        }
+        public int CreaMedida()
+        {
+
+            driver.Navigate().GoToUrl(url + "/medida/Create");
+            int idBuscaNumero = 0;
+            //Genero id Aleatoreo
+            Random rnd = new Random();
+            idBuscaNumero = rnd.Next(0, 1000);
+
+            //convierto id para text
+            String idBusca = Convert.ToString(idBuscaNumero);
+
+            //Ingreso registros
+            driver.FindElement(By.Id("Id")).SendKeys(idBusca);
+            driver.FindElement(By.Id("nombre")).SendKeys("Pan");
+
+            //Presiono click en Boton
+            driver.FindElement(By.ClassName("btn")).Click();
+
+            return idBuscaNumero;
+        }
+        [Test]
+        public void RegistroMedidaTest()
+        {
+            // Ingreso Login
+            LoginMedida();
 
             //Busca url 
             driver.Navigate().GoToUrl(url + "/medida");
@@ -49,76 +79,56 @@ namespace UnitTestPanaderia
             driver.Close();
             driver.Quit();
         }
+       
         [Test]
-        public void EditarMedidaTest()
+        public void EditaMedidaTest()
         {
-            // Variables para busqueda 
-            //string idBusca = "1";
-            string nombreBusca = "Crea_Prueba_" + DateTime.Today;
-            //Modifico nombre de receta
-            string nombreModifico = "Prueba_Actualizada" + DateTime.Today;
-
-            //Id para comprobar nombre de variables
-            string buscaNombre = "Prueba_Actualizada" + DateTime.Today;
-
-            // Ingreso Login
-            driver.Navigate().GoToUrl(url + "/Home/Login");
-            driver.FindElement(By.Id("nombre")).SendKeys("ariel");
-            driver.FindElement(By.Id("clave")).SendKeys("1234");
-            driver.FindElement(By.ClassName("btn-block")).Click();
+            LoginMedida();
+            string idBusca = Convert.ToString(CreaMedida());
+            string nombreModifico = "Modifico " + DateTime.Today + idBusca;
 
             //Busca url 
-            driver.Navigate().GoToUrl(url + "/medida");
-
-            //Presiono click 
-            //driver.FindElement(By.Id(idBusca)).Click();
-            //Presiono click 
-            driver.FindElement(By.Id(nombreBusca)).Click();
+            driver.Navigate().GoToUrl(url + "/medida/Edit/" + idBusca);
 
             //Limpio formulario
             driver.FindElement(By.Id("nombre")).Clear();
-            
+
             //Modifico Campos
             driver.FindElement(By.Id("nombre")).SendKeys(nombreModifico);
 
-            //Presiono boton
+            //click boton
             driver.FindElement(By.ClassName("btn")).Click();
 
-            //Busco elemento id para obtener atributos y verificar  que el id existe 
-            IWebElement element = driver.FindElement(By.Id(buscaNombre));
+            //Busco elemento id para optener atributos y verificar  que el id existe 
+            IWebElement element = driver.FindElement(By.Id(idBusca));
             String textoAtributo = element.GetAttribute("name");
 
             //comparo elementos
-            //Microsoft.VisualStudio.TestTools.UnitTesting.Assert.AreEqual(nombreModifico, textoAtributo);
-
+            Microsoft.VisualStudio.TestTools.UnitTesting.Assert.AreEqual(nombreModifico, textoAtributo);
             driver.Close();
             driver.Quit();
         }
-
+       
         [Test]
-        public void EliminaMedidaTest()
+        public void DeleteMedidaTest()
         {
-            //elimino Medida    
-            string seleccionMedida = "Prueba_Actualizada" + DateTime.Today;
-
-            // Ingreso Login
-            driver.Navigate().GoToUrl(url + "/Home/Login");
-            driver.FindElement(By.Id("nombre")).SendKeys("ariel");
-            driver.FindElement(By.Id("clave")).SendKeys("1234");
-            driver.FindElement(By.ClassName("btn-block")).Click();
+            LoginMedida();
+            string idBusca = Convert.ToString(CreaMedida());
+            string nombreElimino = "";
 
             //Busca url 
-            driver.Navigate().GoToUrl(url + "/medida");
-                       
-            //click  boton eliminar
-            driver.FindElement(By.Id(seleccionMedida)).Click();
+            driver.Navigate().GoToUrl(url + "/medida/Delete/" + idBusca);
+            
+            //click boton
+            driver.FindElement(By.ClassName("btn")).Click();
 
-            //Presiono boton
-            //driver.FindElement(By.ClassName("btnEliminar")).Click();
+            //Busco elemento id para optener atributos y verificar  que el id existe 
+            //IWebElement element = driver.FindElement(By.Id(idBusca));
+            //String textoAtributo = element.GetAttribute("name");
 
-            //Cierro Driver y ventana 
-            //driver.Close();
-            //driver.Quit();
+            ////comparo elementos
+            //Microsoft.VisualStudio.TestTools.UnitTesting.Assert.AreEqual(nombreElimino, textoAtributo);
+
         }
     }
 }
